@@ -82,7 +82,7 @@ class LocalhostAPICall : RESTAPICall<LocalhostRequest, LocalhostResponse>({ requ
         append("Authorization", "Bearer sk-abcdefghijklmnop123456")
     }
 
-    // API가 호출된 호, 성공적으로 호출된 경우에 데이터를 파싱합니다.
+    // API가 호출된 후, 성공적으로 호출된 경우에 데이터를 파싱합니다.
     // "성공적" 호출은 일반적으로 200번대 코드를 받은 경우를 의미합니다.
     // RESTAPICall은 모든 응답을 JSONObject로 파싱하여 되돌려줍니다.
     override suspend fun parseResult(
