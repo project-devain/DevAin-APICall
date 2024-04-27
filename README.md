@@ -15,7 +15,7 @@ repositories {
 }
 
 depdendencies {
-    implementation "skywolf46:devain-api-call:1.3.1"
+    implementation "skywolf46:devain-api-call:1.3.2"
 }
 ```
 
