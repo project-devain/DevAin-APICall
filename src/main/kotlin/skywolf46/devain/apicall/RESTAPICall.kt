@@ -27,7 +27,7 @@ abstract class RESTAPICall<REQUEST : Request<JSONObject>, RESPONSE : Response>(
     }
 
     private val jsonParser by lazy {
-        jsonParser.getOrElse { JSONParser() }
+        jsonParser.getOrElse { get<JSONParser>() }
     }
 
     override suspend fun call(request: REQUEST): Either<APIError, RESPONSE> {
@@ -42,7 +42,12 @@ abstract class RESTAPICall<REQUEST : Request<JSONObject>, RESPONSE : Response>(
                 setBody(prebuiltRequest.toJSONString())
             }
             if (result.status.value in 200..299) {
-                parseResult(request, jsonParser.parse(result.bodyAsText()) as JSONObject)
+                if (result.status.value == 204) {
+                    // No content
+                    parseResult(request, JSONObject())  
+                } else {
+                    parseResult(request, jsonParser.parse(result.bodyAsText()) as JSONObject)
+                }
             } else {
                 parseHttpError(request, result, result.status.value).left()
             }
