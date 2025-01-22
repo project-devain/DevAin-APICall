@@ -18,14 +18,17 @@ import skywolf46.devain.apicall.networking.Response
 abstract class RESTAPICall<REQUEST : Request<JSONObject>, RESPONSE : Response>(
     val endpointProvider: (REQUEST) -> String,
     client: Option<HttpClient> = None,
-    val method: HttpMethod = HttpMethod.Get
+    val method: HttpMethod = HttpMethod.Get,
+    jsonParser : Option<JSONParser> = None
 ) : APICall<REQUEST, RESPONSE> {
 
     private val client by lazy {
         client.getOrElse { get<HttpClient>() }
     }
 
-    private val jsonParser by inject<JSONParser>()
+    private val jsonParser by lazy {
+        jsonParser.getOrElse { JSONParser() }
+    }
 
     override suspend fun call(request: REQUEST): Either<APIError, RESPONSE> {
         val prebuiltRequest = request.serialize().getOrElse { return PreconditionError(it).left() }
