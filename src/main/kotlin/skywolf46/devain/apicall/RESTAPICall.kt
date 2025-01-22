@@ -38,10 +38,10 @@ abstract class RESTAPICall<REQUEST : Request<JSONObject>, RESPONSE : Response>(
                 }
                 setBody(prebuiltRequest.toJSONString())
             }
-            if (result.status.value != 200) {
-                parseHttpError(request, result, result.status.value).left()
-            } else {
+            if (result.status.value in 200..299) {
                 parseResult(request, jsonParser.parse(result.bodyAsText()) as JSONObject)
+            } else {
+                parseHttpError(request, result, result.status.value).left()
             }
         }.getOrElse {
             onError(it).left()
